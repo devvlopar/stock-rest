@@ -4,6 +4,7 @@ from .serializers import StockTransactionSerializer
 from django.db.models import Sum
 from rest_framework.response import Response
 from django.db import models
+from rest_framework.views import APIView
 
 class StockSummaryView(generics.ListAPIView):
     serializer_class = StockTransactionSerializer
@@ -41,3 +42,15 @@ class StockSummaryView(generics.ListAPIView):
         }
 
         return Response(response_data)
+
+
+
+class AddStock(APIView):
+
+    def post(self, request):
+        ser_obj = StockTransactionSerializer(data = request.data)
+        if ser_obj.is_valid():
+            ser_obj.save()
+            return Response({'stock': 'Added!!'})
+        else:
+            return Response(ser_obj.errors)
